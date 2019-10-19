@@ -26,4 +26,3 @@ if (!isConnect()) {
     <fieldset>
   </fieldset>
 </form>
-
