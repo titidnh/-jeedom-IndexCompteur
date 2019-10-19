@@ -116,37 +116,31 @@ class IndexCompteur extends eqLogic {
 }
 
 class IndexCompteurCmd extends cmd {
-    //public static $_widgetPossibility = array('custom' => false);
-
     public function execute($_options = array()) {
-        if ($this->getType() == 'info') {
-            return;
-        }
+        // if ($this->getType() == 'info') {
+        //     return;
+        // }
 
-        $eqLogic = $this->getEqLogic();
-        if ($this->getLogicalId() == 'NewIndex') {
-           // log::add('IndexCompteur', 'debug', "Hello");
-            log::add('IndexCompteur', 'debug', $_options['val']);
+        // $eqLogic = $this->getEqLogic();
+        // if ($this->getLogicalId() == 'NewIndex') {
+        //     log::add('IndexCompteur', 'debug', $_options['val']);
 
-            $lastIndexCmd = $eqLogic->getCmd(null, 'LastIndex'); 
-            //$cmd->setCollectDate(date('Y-m-d H:i:s', $device['dashboard_data']['date_max_temp']));
-            //$eqLogic->setConfiguration('firmware', $module['firmware']);
-            //$eqLogic->save();
-            $newIndex = $_options['val'];
-            $lastIndexCmd->event($newIndex);
+        //     $lastIndexCmd = $eqLogic->getCmd(null, 'LastIndex'); 
+        //     $newIndex = $_options['val'];
+        //     $lastIndexCmd->event($newIndex);
 
-            $deltaIndexCmd = $eqLogic->getCmd(null, 'DeltaIndex');
-            // Reference
-            $lastIndex = $eqLogic->getConfiguration('lastIndex');
-            if($lastIndex == '')
-            {
-                $lastIndex = 0;
-            }
+        //     $deltaIndexCmd = $eqLogic->getCmd(null, 'DeltaIndex');
+        //     // Reference
+        //     $lastIndex = $eqLogic->getConfiguration('lastIndex');
+        //     if($lastIndex == '')
+        //     {
+        //         $lastIndex = 0;
+        //     }
 
-            $deltaIndexCmd->event($newIndex - $lastIndex);
+        //     $deltaIndexCmd->event($newIndex - $lastIndex);
 
-            $eqLogic->refreshWidget();
-        }
+        //     $eqLogic->refreshWidget();
+        // }
     }
 }
 
