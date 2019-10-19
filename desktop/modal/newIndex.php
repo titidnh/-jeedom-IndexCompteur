@@ -25,7 +25,7 @@ if (!isConnect('admin')) {
 }
 
 $id = init('id');
-$eqLogic = IndexCompteur::byId($id);
+$eqLogic = MesIndexCompteur::byId($id);
 if (!is_object($eqLogic)) {
     throw new Exception(__('EqLogic non trouvé: ', __FILE__) . $id);
 }
