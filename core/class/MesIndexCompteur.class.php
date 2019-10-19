@@ -25,6 +25,60 @@ class MesIndexCompteur extends eqLogic {
         'displayName' => array('dashboard' => true, 'view' => true),
         'optionalParameters' => true,
     ));
+
+    public function postSave() {
+        $unit = '';
+        switch ($this->getConfiguration('typeCompteur')) {
+            case "Electricite":
+                $unit="kWh";
+                break;
+            case "Eau":
+            case "Gaz":
+                $unit="m3";
+                break;
+        }
+
+        $lastIndexCmd = $this->getCmd(null, 'LastIndex');
+        if (!is_object($lastIndexCmd)) {
+            $lastIndexCmd = new IndexCompteurCmd();
+            $lastIndexCmd->setName(__('Index Courant', __FILE__));
+            $lastIndexCmd->setIsHistorized(1);
+        }
+
+        $lastIndexCmd->setEqLogic_id($this->getId());
+        $lastIndexCmd->setLogicalId('LastIndex');
+        $lastIndexCmd->setType('info');
+        $lastIndexCmd->setSubType('numeric');
+        $lastIndexCmd->setUnite($unit);
+        $lastIndexCmd->save();
+
+        $deltaIndexCmd = $this->getCmd(null, 'DeltaIndex');
+        if (!is_object($deltaIndexCmd)) {
+            $deltaIndexCmd = new IndexCompteurCmd();
+            $deltaIndexCmd->setName(__('Index Delta', __FILE__));
+            $deltaIndexCmd->setIsHistorized(1);
+        }
+
+        $deltaIndexCmd->setEqLogic_id($this->getId());
+        $deltaIndexCmd->setLogicalId('DeltaIndex');
+        $deltaIndexCmd->setType('info');
+        $deltaIndexCmd->setSubType('numeric');
+        $deltaIndexCmd->setUnite($unit);
+        $deltaIndexCmd->save();
+
+
+        $enterNewIndex = $this->getCmd(null, 'NewIndex');
+        if (!is_object($enterNewIndex)) {
+            $enterNewIndex = new IndexCompteurCmd();
+            $enterNewIndex->setName(__('Nouvel Index', __FILE__));
+        }
+
+        $enterNewIndex->setEqLogic_id($this->getId());
+        $enterNewIndex->setLogicalId('NewIndex');
+        $enterNewIndex->setType('action');
+        $enterNewIndex->setSubType('other');
+        $enterNewIndex->save();
+    }
 }
 
 class MesIndexCompteurCmd extends cmd {
