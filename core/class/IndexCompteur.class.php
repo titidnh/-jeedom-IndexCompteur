@@ -149,3 +149,5 @@ class IndexCompteurCmd extends cmd {
         }
     }
 }
+
+?>

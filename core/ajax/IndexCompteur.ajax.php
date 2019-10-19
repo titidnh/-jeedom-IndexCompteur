@@ -34,3 +34,4 @@ try {
     ajax::error(displayException($e), $e->getCode());
 }
 
+?>
