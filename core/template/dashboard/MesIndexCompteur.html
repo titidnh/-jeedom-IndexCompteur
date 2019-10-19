@@ -29,7 +29,8 @@
     <script type="text/javascript">
         function newIndexPopup_#id#() 
         {
-            alert('Hello World!');
+            $('#md_modal').dialog({ title: "#name_display#", height: 300, width: 650 });
+            $('#md_modal').load('index.php?v=d&plugin=MesIndexCompteur&modal=newIndex&id=#id#').dialog('open');
         }
     </script>
 </div>
