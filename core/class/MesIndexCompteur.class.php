@@ -79,6 +79,39 @@ class MesIndexCompteur extends eqLogic {
         $enterNewIndex->setSubType('other');
         $enterNewIndex->save();
     }
+
+    public function toHtml($_version = 'dashboard') {
+        //cache::delete('widgetHtml' . $_version . $this->getId());
+        $replace = $this->preToHtml($_version);
+        if (!is_array($replace)) {
+            log::add(__CLASS__, 'debug', 'Not array');
+            return $replace;
+        }
+     
+        $lastIndexCmd = $this->getCmd(null, 'LastIndex'); 
+        $deltaIndexCmd = $this->getCmd(null, 'DeltaIndex');
+        $enterNewIndex = $this->getCmd(null, 'NewIndex');
+        $version = jeedom::versionAlias($_version);
+        $currentIndex =  $lastIndexCmd->execCmd();
+        if($currentIndex == '' || $currentIndex == null)
+        {
+            $currentIndex = 0;
+        }
+
+        $deltaIndex =  $deltaIndexCmd->execCmd();
+        if($deltaIndex == '' || $deltaIndex == null)
+        {
+            $deltaIndex = 0;
+        }
+
+        $replace['#CurrentIndex#'] = $currentIndex;
+        $replace['#DeltaIndex#'] = round($deltaIndex, 3);
+        $replace['#CurrentIndexUnitCode#'] = $lastIndexCmd->getUnite();
+        $replace['#EncodeNewIndex#'] = $enterNewIndex->getId();
+		$html = template_replace($replace, getTemplate('core', $version, 'MesIndexCompteur', 'MesIndexCompteur'));
+        //cache::set('widgetHtml' . $_version . $this->getId(), $html, 0);
+		return $html;
+    }
 }
 
 class MesIndexCompteurCmd extends cmd {
