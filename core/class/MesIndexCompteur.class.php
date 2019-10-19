@@ -20,113 +20,38 @@
 require_once __DIR__  . '/../../../../core/php/core.inc.php';
 
 class MesIndexCompteur extends eqLogic {
-    /*     * *************************Attributs****************************** */
-
-
-
-    /*     * ***********************Methode static*************************** */
-
-    /*
-     * Fonction exécutée automatiquement toutes les minutes par Jeedom
-      public static function cron() {
-
-      }
-     */
-
-
-    /*
-     * Fonction exécutée automatiquement toutes les heures par Jeedom
-      public static function cronHourly() {
-
-      }
-     */
-
-    /*
-     * Fonction exécutée automatiquement tous les jours par Jeedom
-      public static function cronDaily() {
-
-      }
-     */
-
-
-
-    /*     * *********************Méthodes d'instance************************* */
-
-    public function preInsert() {
-        
-    }
-
-    public function postInsert() {
-        
-    }
-
-    public function preSave() {
-        
-    }
-
-    public function postSave() {
-        
-    }
-
-    public function preUpdate() {
-        
-    }
-
-    public function postUpdate() {
-        
-    }
-
-    public function preRemove() {
-        
-    }
-
-    public function postRemove() {
-        
-    }
-
-    /*
-     * Non obligatoire mais permet de modifier l'affichage du widget si vous en avez besoin
-      public function toHtml($_version = 'dashboard') {
-
-      }
-     */
-
-    /*
-     * Non obligatoire mais ca permet de déclencher une action après modification de variable de configuration
-    public static function postConfig_<Variable>() {
-    }
-     */
-
-    /*
-     * Non obligatoire mais ca permet de déclencher une action avant modification de variable de configuration
-    public static function preConfig_<Variable>() {
-    }
-     */
-
-    /*     * **********************Getteur Setteur*************************** */
+    public static $_widgetPossibility = array('custom' => array(
+        'visibility' => true,
+        'displayName' => array('dashboard' => true, 'view' => true),
+        'optionalParameters' => true,
+    ));
 }
 
 class MesIndexCompteurCmd extends cmd {
-    /*     * *************************Attributs****************************** */
-
-
-    /*     * ***********************Methode static*************************** */
-
-
-    /*     * *********************Methode d'instance************************* */
-
-    /*
-     * Non obligatoire permet de demander de ne pas supprimer les commandes même si elles ne sont pas dans la nouvelle configuration de l'équipement envoyé en JS
-      public function dontRemoveCmd() {
-      return true;
-      }
-     */
-
     public function execute($_options = array()) {
-        
+        if ($this->getType() == 'info') {
+            return;
+        }
+
+        $eqLogic = $this->getEqLogic();
+        if ($this->getLogicalId() == 'NewIndex') {
+            log::add('MesIndexCompteur', 'debug', $_options['val']);
+
+            $lastIndexCmd = $eqLogic->getCmd(null, 'LastIndex'); 
+            $newIndex = $_options['val'];
+            $lastIndexCmd->event($newIndex);
+
+            $deltaIndexCmd = $eqLogic->getCmd(null, 'DeltaIndex');
+            // Reference
+            $lastIndex = $eqLogic->getConfiguration('lastIndex');
+            if($lastIndex == '')
+            {
+                $lastIndex = 0;
+            }
+
+            $deltaIndexCmd->event($newIndex - $lastIndex);
+
+            $eqLogic->refreshWidget();
+        }
     }
-
-    /*     * **********************Getteur Setteur*************************** */
 }
-
-
