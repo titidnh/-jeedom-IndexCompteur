@@ -114,7 +114,7 @@ class MesIndexCompteur extends eqLogic {
         $unitPrice = $this->getConfiguration('unitPrice');
         if($subscriptionPrice != null && $subscriptionPrice != '' && $unitPrice != null && $unitPrice != '')
         {
-            $calculatedPrice = $subscriptionPrice + ($unitPrice * $deltaIndex);
+            $calculatedPrice = $subscriptionPrice + max(($unitPrice * $deltaIndex), 0);
         }
         
         $replace['#calculatedPrice#'] = round($calculatedPrice, 3);
