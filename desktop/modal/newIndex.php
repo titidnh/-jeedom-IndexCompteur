@@ -35,9 +35,17 @@ sendVarToJS('eqLogicId', $id);
 ?>
 
 <div style="position: absolute;  left: 50%;  top: 50%;  -webkit-transform: translate(-50%, -50%);  transform: translate(-50%, -50%);">
-    <label for="txtNewIndex">New Index</label>
-    <input type="text" id="txtNewIndex"/>
-    <button type="button" class="btn btn-xs btn-default action" id="newIndexSave">Save</button>
+    <div>
+        <label for="txtNewIndex">New Index</label>
+        <input type="text" id="txtNewIndex"/>
+    </div>
+    <div>
+        <label for="ckbxSetNewReferenceValue">Index de référence</label>
+        <input type="checkbox" id="ckbxSetNewReferenceValue"/>
+    </div>
+    <div style="text-align:right;">
+        <button type="button" class="btn btn-xs btn-default action" id="newIndexSave">Save</button>
+    </div>
 </div>
 
 <?php
@@ -46,8 +54,10 @@ $enterNewIndex = $eqLogic->getCmd(null, 'NewIndex');
 $content = '<script type="text/javascript">
 $("#newIndexSave").on("click", function () {
     var newIndex= $("#txtNewIndex").val();
-    jeedom.cmd.execute({id:'.$enterNewIndex->getId().', value: { val: newIndex } });
+    var isNewReference = $("#ckbxSetNewReferenceValue").is(":checked");
+    jeedom.cmd.execute({id:'.$enterNewIndex->getId().', value: { val: newIndex, referenceIndex: isNewReference } });
     $("#txtNewIndex").val(\'\');
+    $("#ckbxSetNewReferenceValue"). prop("checked", false);
     $("#md_modal").dialog(\'close\');
 });
 </script>';
