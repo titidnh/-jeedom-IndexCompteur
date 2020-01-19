@@ -108,6 +108,17 @@ class MesIndexCompteur extends eqLogic {
         $replace['#DeltaIndex#'] = round($deltaIndex, 3);
         $replace['#CurrentIndexUnitCode#'] = $lastIndexCmd->getUnite();
         $replace['#EncodeNewIndex#'] = $enterNewIndex->getId();
+
+        $calculatedPrice = 0;
+        $subscriptionPrice = $this->getConfiguration('subscriptionPrice');
+        $unitPrice = $this->getConfiguration('unitPrice');
+        if($subscriptionPrice != null && $subscriptionPrice != '' && $unitPrice != null && $unitPrice != '')
+        {
+            $calculatedPrice = $subscriptionPrice + ($unitPrice * $deltaIndex);
+        }
+        
+        $replace['#calculatedPrice#'] = round($calculatedPrice, 3);
+
 		$html = template_replace($replace, getTemplate('core', $version, 'MesIndexCompteur', 'MesIndexCompteur'));
         //cache::set('widgetHtml' . $_version . $this->getId(), $html, 0);
 		return $html;
@@ -130,6 +141,12 @@ class MesIndexCompteurCmd extends cmd {
 
             $deltaIndexCmd = $eqLogic->getCmd(null, 'DeltaIndex');
             // Reference
+            if($_options['referenceIndex'] == 1)
+            {
+              $eqLogic->setConfiguration('lastIndex', $newIndex);
+              $eqLogic->save();
+            }
+
             $lastIndex = $eqLogic->getConfiguration('lastIndex');
             if($lastIndex == '')
             {
